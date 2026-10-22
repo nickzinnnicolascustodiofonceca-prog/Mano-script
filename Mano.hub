@@ -1,0 +1,142 @@
+
+--// 🔥 MANO HUB
+--// Interface mobile em Luau
+--// Menu visual para Roblox
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "ManoHub"
+gui.ResetOnSpawn = false
+gui.DisplayOrder = 999
+gui.Parent = playerGui
+
+local main = Instance.new("Frame")
+main.Name = "Main"
+main.Size = UDim2.fromOffset(285, 385)
+main.Position = UDim2.new(0.5, -142, 0.5, -192)
+main.BackgroundColor3 = Color3.fromRGB(20, 22, 32)
+main.BorderSizePixel = 0
+main.Active = true
+main.Parent = gui
+
+Instance.new("UICorner", main).CornerRadius =
+    UDim.new(0, 12)
+
+local outline = Instance.new("UIStroke", main)
+outline.Color = Color3.fromRGB(0, 190, 255)
+outline.Thickness = 2
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, -45, 0, 48)
+title.Position = UDim2.fromOffset(10, 0)
+title.BackgroundTransparency = 1
+title.Text = "🔥 MANO HUB 🔥"
+title.TextColor3 = Color3.new(1, 1, 1)
+title.TextSize = 21
+title.Font = Enum.Font.GothamBold
+title.Parent = main
+
+local close = Instance.new("TextButton")
+close.Size = UDim2.fromOffset(32, 32)
+close.Position = UDim2.new(1, -38, 0, 7)
+close.BackgroundColor3 = Color3.fromRGB(180, 45, 55)
+close.Text = "X"
+close.TextColor3 = Color3.new(1, 1, 1)
+close.TextSize = 16
+close.Font = Enum.Font.GothamBold
+close.Parent = main
+
+Instance.new("UICorner", close).CornerRadius =
+    UDim.new(0, 8)
+
+close.Activated:Connect(function()
+    gui:Destroy()
+end)
+
+local status = Instance.new("TextLabel")
+status.Size = UDim2.new(1, -20, 0, 25)
+status.Position = UDim2.fromOffset(10, 45)
+status.BackgroundTransparency = 1
+status.Text = "Status: pronto"
+status.TextColor3 = Color3.fromRGB(100, 220, 255)
+status.TextSize = 13
+status.Font = Enum.Font.Gotham
+status.Parent = main
+
+local function makeButton(text, y, callback)
+    local b = Instance.new("TextButton")
+    b.Size = UDim2.new(1, -24, 0, 42)
+    b.Position = UDim2.fromOffset(12, y)
+    b.BackgroundColor3 = Color3.fromRGB(38, 47, 67)
+    b.TextColor3 = Color3.new(1, 1, 1)
+    b.Text = text
+    b.TextSize = 14
+    b.Font = Enum.Font.GothamSemibold
+    b.Parent = main
+
+    Instance.new("UICorner", b).CornerRadius =
+        UDim.new(0, 8)
+
+    b.Activated:Connect(callback)
+    return b
+end
+
+local zones = {
+    "Base",
+    "Forest Zone",
+    "Desert Zone",
+    "Snow Zone",
+    "Candy Zone",
+    "Volcano Zone",
+    "Ocean Zone",
+    "Blossom Zone",
+    "Galaxy Zone",
+    "Crystal Zone",
+    "Heaven Zone"
+}
+
+local selected = 1
+
+makeButton("📍 Área: Base (próxima)", 77, function()
+    selected = selected % #zones + 1
+    status.Text = "Selecionada: " .. zones[selected]
+end)
+
+local function makeToggle(name, y)
+    local enabled = false
+    local b
+
+    b = makeButton(name .. ": OFF", y, function()
+        enabled = not enabled
+
+        b.Text = name .. ": " ..
+            (enabled and "ON" or "OFF")
+
+        b.BackgroundColor3 = enabled
+            and Color3.fromRGB(25, 120, 80)
+            or Color3.fromRGB(38, 47, 67)
+
+        status.Text = name ..
+            (enabled and " ativado" or " desativado")
+    end)
+
+    return b
+end
+
+makeToggle("🌳 Auto Farm", 127)
+makeToggle("💪 Auto Força", 177)
+makeToggle("🥚 Auto Ovos", 227)
+
+makeButton("📍 Teleporte para área selecionada", 277, function()
+    status.Text = "Destino: " .. zones[selected]
+        .. " (teleporte não conectado)"
+end)
+
+makeButton("🔄 Atualizar status", 327, function()
+    status.Text = "MANO HUB carregado!"
+end)
+
+print("MANO HUB carregado!")
